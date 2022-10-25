@@ -30,6 +30,7 @@ namespace MusalaTestAspNet.Server.Controllers
             return Ok(ph);
         }
 
+
         [HttpPost]
         public async Task<ActionResult<Peripheral>> Post(Peripheral ph)
         {
@@ -37,11 +38,19 @@ namespace MusalaTestAspNet.Server.Controllers
 
             try
             {
-                ph.Gateway = null;
-                _context.Peripherals.Add(ph);
-                await _context.SaveChangesAsync();
-                orepsuesta.Code = Code.Success;
-                orepsuesta.Message = "Peripheral inserted";
+                if (_context.Peripherals.Where(p => p.GatewayId == ph.GatewayId).Count() >= 10)
+                {
+                    orepsuesta.Code = Code.Error;
+                    orepsuesta.Message = "Peripheral list full";
+                }
+                else
+                {
+                    ph.Gateway = null;
+                    _context.Peripherals.Add(ph);
+                    await _context.SaveChangesAsync();
+                    orepsuesta.Code = Code.Success;
+                    orepsuesta.Message = "Peripheral inserted";
+                }                
                 orepsuesta.Data = await GetDBPeripherals(ph.GatewayId);
             }
             catch (Exception ex)

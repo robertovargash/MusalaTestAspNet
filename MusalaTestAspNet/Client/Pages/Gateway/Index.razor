@@ -34,6 +34,7 @@ else
             <MudTd DataLabel="Name">@context.Name</MudTd>
             <MudTd DataLabel="IPv4Address">@context.IPv4Address</MudTd>
             <MudTd DataLabel="Operations">
+                <MudButton Href="@($"gateway/view/{context.Id}")" Color="Color.Primary">View</MudButton>
                 <MudButton Href="@($"gateway/edit/{context.Id}")" Color="Color.Primary">EDIT</MudButton>
                 <MudButton @onclick="@((e) => DeleteGateway(context))" Color="Color.Secondary">DELETE</MudButton>
             </MudTd>

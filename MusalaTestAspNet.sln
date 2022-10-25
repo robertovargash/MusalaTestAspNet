@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.3.32811.315
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MusalaTestAspNet.Server", "MusalaTestAspNet\Server\MusalaTestAspNet.Server.csproj", "{BFEAFE00-DBE1-406C-8436-208D24EB3A0A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MusalaTestAspNet.Server", "MusalaTestAspNet\Server\MusalaTestAspNet.Server.csproj", "{BFEAFE00-DBE1-406C-8436-208D24EB3A0A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MusalaTestAspNet.Client", "MusalaTestAspNet\Client\MusalaTestAspNet.Client.csproj", "{B70ED433-8C9A-4B10-A6D5-AD0B1A9E4E0C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MusalaTestAspNet.Client", "MusalaTestAspNet\Client\MusalaTestAspNet.Client.csproj", "{B70ED433-8C9A-4B10-A6D5-AD0B1A9E4E0C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MusalaTestAspNet.Shared", "MusalaTestAspNet\Shared\MusalaTestAspNet.Shared.csproj", "{D4D71DC8-25A4-49F8-96C6-4F549178A52B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MusalaTestAspNet.Shared", "MusalaTestAspNet\Shared\MusalaTestAspNet.Shared.csproj", "{D4D71DC8-25A4-49F8-96C6-4F549178A52B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

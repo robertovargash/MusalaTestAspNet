@@ -52,6 +52,8 @@ namespace MusalaTestAspNet.Server.Controllers
             catch (Exception ex)
             {
                 orepsuesta.Message = ex.Message;
+                orepsuesta.Code = Code.Error;
+                orepsuesta.Data = await GetDBGatways();
             }
             return Ok(orepsuesta);
 

@@ -13,7 +13,7 @@
 </MudPaper>
 <MudPaper Elevation="0" Class="mx-2 mt-5">
     <MudText Typo="Typo.h6" Color="Color.Primary" Class="mb-2">Gateway Peripherals</MudText>
-    <MudButton Color="Color.Success" @onclick="@(() => CreatePeripheral())">Add Peripheral</MudButton>
+    <MudButton Color="Color.Success" @onclick="@(() => CreatePeripheral())" Disabled="@(cant_add_peripherals)">Add Peripheral</MudButton>
     <MudDivider />
     <MudTable Elevation="0" Items="@GatewayService.Peripherals" Dense="false" Hover="true" Bordered="false" Striped="true">
         <HeaderContent>
@@ -26,28 +26,27 @@
         <RowTemplate>
             <MudTd DataLabel="ID">@context.Id</MudTd>
             <MudTd DataLabel="Vendor">@context.Vendor</MudTd>
-            <MudTd DataLabel="CreatedAt">@context.DateCreated.ToShortDateString()</MudTd>
+            <MudTd DataLabel="CreatedAt">@(((DateTime)context.DateCreated).ToShortDateString())</MudTd>
             <MudTd DataLabel="Status">@context.Status</MudTd>
             <MudTh DataLabel="Operations">
                 <MudButton @onclick="@((e) => UpdatePeripheral(context))" Color="Color.Primary">Edit</MudButton>
                 <MudButton @onclick="@((e) => DeletePeripheral(context))" Color="Color.Secondary">DELETE</MudButton>
             </MudTh>
         </RowTemplate>
-        <PagerContent>
-            <MudTablePager />
-        </PagerContent>
     </MudTable>
 </MudPaper>
 
-@code {
+    @code {
 
     [Parameter] public int id { get; set; }
+    private bool cant_add_peripherals;
     Gateway gateway = new Gateway() { };
 
     protected async override Task OnParametersSetAsync()
     {
         gateway = await GatewayService.GetGateway(id);
         await GatewayService.FillPeripherials(gateway);
+        cant_add_peripherals = GatewayService.Peripherals.Count >= 10;
     }
 
     async Task EditGateway()
@@ -73,6 +72,7 @@
             await GatewayService.CreatePeripherial((Peripheral)result.Data);
             ShowMessage(GatewayService.Code, GatewayService.Message);
         }
+        cant_add_peripherals = GatewayService.Peripherals.Count >= 10;
     }
 
     private void ShowMessage(Code code, string message)
@@ -106,6 +106,7 @@
             await GatewayService.DeletePeripherial(peripheral.Id);
             ShowMessage(GatewayService.Code, GatewayService.Message);
         }
+        cant_add_peripherals = GatewayService.Peripherals.Count >= 10;
     }
 
     async Task UpdatePeripheral(Peripheral peripheral)
@@ -116,16 +117,11 @@
                 ["peripheral"] = peripheral,
                 ["Operation"] = "UPDATE",
             };
-
-
         var dialog = DialogService.Show<AddPeripheral>("Update item", parameters);
         var result = await dialog.Result;
 
         if (!result.Cancelled)
         {
-            //In a real world scenario we would reload the data from the source here since we "removed" it in the dialog already.
-            //Guid.TryParse(result.Data.ToString(), out Guid deletedServer);
-            //Commodity com = CommodityService.Commodities.Find(c => c.Id == (int)deletedServer);
             await GatewayService.UpdatePeripherial((Peripheral)result.Data);
             ShowMessage(GatewayService.Code, GatewayService.Message);
         }
