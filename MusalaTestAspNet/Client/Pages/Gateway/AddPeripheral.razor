@@ -1,0 +1,29 @@
+﻿@inject ISnackbar Snackbar
+<MudDialog>
+    <DialogContent>
+        <PeripheralForm peripheral="peripheral" OnValidSubmit="@CreateGateway">
+
+        </PeripheralForm>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">Cancel</MudButton>
+        <MudButton Color="Color.Primary" OnClick="CreateGateway">@Operation</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
+
+    [Parameter] public Peripheral peripheral { get; set; } = new Peripheral();
+    [Parameter] public string Operation { get; set; }
+
+    private void Cancel()
+    {
+        MudDialog.Cancel();
+    }
+
+    private void CreateGateway()
+    {
+        MudDialog.Close(DialogResult.Ok(peripheral));
+    }
+}

@@ -1,0 +1,109 @@
+﻿@page "/gateway"
+@inject IGatewayService GatewayService
+@inject IDialogService DialogService
+@inject ISnackbar Snackbar
+
+<style>
+    .mud-table-container {
+        overflow: auto;
+    }
+</style>
+
+<MudText Typo="Typo.h5" Color="Color.Primary" Class="mb-2">Gateways</MudText>
+<MudButton Color="Color.Success" @onclick="@(() => CreateGateway())">New</MudButton>
+<MudDivider />
+@if (GatewayService.Gateways == null)
+{
+    <MudProgressCircular Color="Color.Primary" Indeterminate="true" />
+}
+else if (GatewayService.Gateways.Count == 0)
+{
+    <MudText>No Records Found.</MudText>
+}
+else
+{
+    <MudTable Elevation="25" Items="@GatewayService.Gateways" Dense="false" Hover="true" Bordered="false" Striped="true">
+        <HeaderContent>
+            <MudTh>#</MudTh>
+            <MudTh>Name</MudTh>
+            <MudTh>IPv4 Address</MudTh>
+            <MudTh>Operations</MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="ID">@context.Id</MudTd>
+            <MudTd DataLabel="Name">@context.Name</MudTd>
+            <MudTd DataLabel="IPv4Address">@context.IPv4Address</MudTd>
+            <MudTd DataLabel="Operations">
+                <MudButton Href="@($"gateway/edit/{context.Id}")" Color="Color.Primary">EDIT</MudButton>
+                <MudButton @onclick="@((e) => DeleteGateway(context))" Color="Color.Secondary">DELETE</MudButton>
+            </MudTd>
+        </RowTemplate>
+        <PagerContent>
+            <MudTablePager />
+        </PagerContent>
+    </MudTable>
+}
+@code {
+
+    Gateway warehouse = new Gateway() { };
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadData();
+    }
+
+    private async Task LoadData()
+    {
+        await GatewayService.FillGateways();
+        StateHasChanged();
+    }
+
+    async Task CreateGateway()
+    {
+        var parameters = new DialogParameters
+            {
+                ["gateway"] = new Gateway()
+            };
+        var dialog = DialogService.Show<AddGateway>("Create gateway", parameters);
+        var result = await dialog.Result;
+        if (!result.Cancelled)
+        {
+            await GatewayService.CreateGateway((Gateway)result.Data);
+            ShowMessage(GatewayService.Code, GatewayService.Message);
+        }
+    }
+
+    private void ShowMessage(Code code, string message)
+    {
+        switch (code)
+        {
+            case Code.Success:
+                Snackbar.Add(message, Severity.Success);
+                break;
+            case Code.Error:
+                Snackbar.Add(message, Severity.Error);
+                break;
+            default:
+                Snackbar.Add("Uknown problem", Severity.Warning);
+                break;
+        }
+    }
+
+
+    async Task DeleteGateway(Gateway gateway)
+    {
+        var parameters = new DialogParameters();
+        parameters.Add("ContentText", "Do you want delete this gateway?");
+        parameters.Add("ButtonText", "Delete");
+        parameters.Add("Color", Color.Error);
+        var options = new DialogOptions() { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall };
+        var dialog = DialogService.Show<DeleteItem>("Delete gateway", parameters, options);
+        var result = await dialog.Result;
+
+        if (!result.Cancelled)
+        {
+            await GatewayService.DeleteGateway(gateway.Id);
+            ShowMessage(GatewayService.Code, GatewayService.Message);
+        }
+    }
+}
+

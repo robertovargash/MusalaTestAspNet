@@ -1,0 +1,23 @@
+﻿@using System.Text.RegularExpressions
+@using System.ComponentModel.DataAnnotations
+
+<MudForm Model="@gateway" OnValidSubmit="@OnValidSubmit">
+    <MudTextField T="string" Required="true" RequiredError="Required!" Label="Human readable Name" @bind-Value="@gateway.Name" />
+    <MudTextField T="string" Required="true" RequiredError="Required!" Validation="@(new Func<string, IEnumerable<string>>(IPAddress))" Label="IPv4 Address" @bind-Value="@gateway.IPv4Address" />
+</MudForm>
+@code {
+    [Parameter] public Gateway gateway { get; set; }
+    //[Parameter] public string ButtonText { get; set; } = "Save";
+    [Parameter] public EventCallback OnValidSubmit { get; set; }
+
+    private IEnumerable<string> IPAddress(string value)
+    {
+        if (string.IsNullOrWhiteSpace(value))
+        {
+            yield return "IPAddress is required!";
+            yield break;
+        }
+        if (!Regex.IsMatch(value, "^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$"))
+            yield return "IP Address no Valid";
+    }
+}

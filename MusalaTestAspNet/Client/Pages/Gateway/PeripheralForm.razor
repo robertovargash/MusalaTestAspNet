@@ -1,0 +1,15 @@
+﻿<MudForm Model="@peripheral" OnValidSubmit="@OnValidSubmit">
+    <MudTextField T="string" Required="true" RequiredError="Required!" Label="Name" @bind-Value="@peripheral.Vendor" />
+    @*<MudDatePicker DisableToolbar="true" DateFormat="dd/MM/yyyy" Placeholder="Select Date" Editable="true" Label="Date Created" @bind-Date="@peripheral.DateCreated" />*@
+    <MudSelect @bind-Value="peripheral.Status" Label="Status">
+        @foreach (PeripherialStatus item in Enum.GetValues(typeof(PeripherialStatus)))
+        {
+            <MudSelectItem Value="item" />
+        }
+    </MudSelect>
+</MudForm>
+@code {
+    [Parameter] public Peripheral peripheral { get; set; }
+    //[Parameter] public string ButtonText { get; set; } = "Save";
+    [Parameter] public EventCallback OnValidSubmit { get; set; }
+}

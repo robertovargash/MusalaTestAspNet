@@ -1,0 +1,28 @@
+﻿@inject ISnackbar Snackbar
+<MudDialog>
+    <DialogContent>
+        <GatewayForm gateway="gateway" OnValidSubmit="@CreateGateway">
+
+        </GatewayForm>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">Cancel</MudButton>
+        <MudButton Color="Color.Primary" OnClick="CreateGateway">ADD</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
+
+    [Parameter] public Gateway gateway { get; set; } = new Gateway();
+
+    private void Cancel()
+    {
+        MudDialog.Cancel();
+    }
+
+    private void CreateGateway()
+    {
+        MudDialog.Close(DialogResult.Ok(gateway));
+    }
+}
